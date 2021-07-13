@@ -20,6 +20,7 @@ public class MedicalRecord {
 
 	@Id
 	private String lastName;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Person person;

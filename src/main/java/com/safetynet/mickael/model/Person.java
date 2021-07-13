@@ -1,8 +1,11 @@
 package com.safetynet.mickael.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.safetynet.mickael.model.pk.PersonPk;
@@ -15,8 +18,13 @@ public class Person {
 	private String firstName;
 	@Id
 	private String lastName;
-
+	
+	@ManyToOne
+	@JoinColumn(name = "address", referencedColumnName = "address")
+	@Column(insertable=false, updatable=false)
+	private Firestation firestation;
 	private String address;
+	
 	private String city;
 	private String zip;
 	private String phone;
@@ -81,5 +89,13 @@ public class Person {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Firestation getFirestation() {
+		return firestation;
+	}
+
+	public void setFirestation(Firestation firestation) {
+		this.firestation = firestation;
 	}
 }

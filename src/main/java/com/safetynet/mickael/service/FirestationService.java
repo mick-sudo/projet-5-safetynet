@@ -9,4 +9,6 @@ public interface FirestationService {
 	Iterable<Firestation> list();
 	Firestation save(Firestation firestation);
 	Iterable<Firestation> save(List<Firestation> firestations);
+
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.mickael.dto.MedicalRecordDTO;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.service.MedicalRecordService;
 
@@ -29,7 +30,7 @@ public MedicalRecord save(@RequestBody MedicalRecord medicalRecord) {
 }
 
 @PostMapping("/saveAll")
-public Iterable<MedicalRecord> saveAll(@RequestBody List<MedicalRecord> medicalRecords) {
+public Iterable<MedicalRecord> saveAll(@RequestBody List<MedicalRecordDTO> medicalRecords) {
 	return medicalRecordService.save(medicalRecords);
 }
 }

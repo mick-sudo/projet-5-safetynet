@@ -2,11 +2,13 @@ package com.safetynet.mickael.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.safetynet.mickael.model.pk.PersonPk;
 
@@ -15,23 +17,29 @@ import com.safetynet.mickael.model.pk.PersonPk;
 public class MedicalRecord {
 	@Id
 	private String firstName;
+
 	@Id
 	private String lastName;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
+	@PrimaryKeyJoinColumn
 	private Person person;
 
 	private String birthdate;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<Medication> medications;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<Allergie> allergies;
 
 	public MedicalRecord(String firstName, String lastName) {
 		super();
-		this.firstName = firstName;
+		this.setFirstName(firstName);
 		this.lastName = lastName;
+	}
+
+	public MedicalRecord() {
+
 	}
 
 	public Person getPerson() {
@@ -40,6 +48,14 @@ public class MedicalRecord {
 
 	public void setPerson(Person person) {
 		this.person = person;
+	}
+	
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getBirthdate() {
@@ -64,5 +80,13 @@ public class MedicalRecord {
 
 	public void setAllergies(Set<Allergie> allergies) {
 		this.allergies = allergies;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 }

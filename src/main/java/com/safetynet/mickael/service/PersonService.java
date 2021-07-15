@@ -1,14 +1,12 @@
 package com.safetynet.mickael.service;
 
-import java.util.List;
+import java.util.Set;
 
-import com.safetynet.mickael.model.Person;
-
+import com.safetynet.mickael.dto.PersonDTO;
 
 public interface PersonService {
 
-	Iterable<Person> list();
-	Person save(Person person);
-	Iterable<Person> save(List<Person> persons);
-	List<String> getCommunityMail(String city);
+	void save(PersonDTO dto);
+	void save(Set<PersonDTO> dtos);
+
 }

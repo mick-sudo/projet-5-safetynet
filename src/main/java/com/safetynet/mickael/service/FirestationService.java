@@ -1,14 +1,11 @@
 package com.safetynet.mickael.service;
 
-import java.util.List;
+import java.util.Set;
 
-import com.safetynet.mickael.model.Firestation;
+import com.safetynet.mickael.dto.FirestationDTO;
 
 public interface FirestationService {
 
-	Iterable<Firestation> list();
-	Firestation save(Firestation firestation);
-	Iterable<Firestation> save(List<Firestation> firestations);
-
-	
+	void save(FirestationDTO dto);
+	void save(Set<FirestationDTO> dtos);
 }

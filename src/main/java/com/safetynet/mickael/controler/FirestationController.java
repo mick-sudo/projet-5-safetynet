@@ -9,23 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.mickael.dto.FirestationDTO;
-import com.safetynet.mickael.dto.PersonDTO;
-import com.safetynet.mickael.service.PersonService;
+import com.safetynet.mickael.service.FirestationService;
 
 @RestController
-@RequestMapping("/person")
-public class PersonControler {
-
+@RequestMapping("/firestation")
+public class FirestationController {
+	
 	@Autowired
-	private PersonService personService;
+	private FirestationService firestationService;
 
-	@PostMapping("/save/person")
-	public void save(@RequestBody PersonDTO dto) {
-		this.personService.save(dto);
+	@PostMapping("/save/firestation")
+	public void save(@RequestBody FirestationDTO dto) {
+		this.firestationService.save(dto);
 	}
 	
 	@PostMapping("/save")
-	public void save(@RequestBody Set<PersonDTO> dtos) {
-		this.personService.save(dtos);
+	public void save(@RequestBody Set<FirestationDTO> dtos) {
+		this.firestationService.save(dtos);
 	}
 }

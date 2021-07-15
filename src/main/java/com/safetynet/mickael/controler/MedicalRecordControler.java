@@ -1,36 +1,30 @@
 package com.safetynet.mickael.controler;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.mickael.dto.MedicalRecordDTO;
-import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.service.MedicalRecordService;
 
 @RestController
-@RequestMapping("/medicalrecords")
+@RequestMapping("/medicalrecord")
 public class MedicalRecordControler {
-@Autowired
-private MedicalRecordService medicalRecordService;
 
-@GetMapping("/list")
-public Iterable<MedicalRecord> list() {
-	return medicalRecordService.list();
-}
+	@Autowired
+	private MedicalRecordService medicalRecordService;
 
-@PostMapping("/save")
-public MedicalRecord save(@RequestBody MedicalRecord medicalRecord) {
-	return medicalRecordService.save(medicalRecord);
-}
+	@PostMapping("/save/medicalrecord")
+	public void save(@RequestBody MedicalRecordDTO dto) {
+		this.medicalRecordService.save(dto);
+	}
 
-@PostMapping("/saveAll")
-public Iterable<MedicalRecord> saveAll(@RequestBody List<MedicalRecordDTO> medicalRecords) {
-	return medicalRecordService.save(medicalRecords);
-}
+	@PostMapping("/save")
+	public void save(@RequestBody Set<MedicalRecordDTO> dtos) {
+		this.medicalRecordService.save(dtos);
+	}
 }

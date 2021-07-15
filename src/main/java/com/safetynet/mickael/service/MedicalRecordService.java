@@ -1,14 +1,13 @@
 package com.safetynet.mickael.service;
 
-import java.util.List;
+import java.util.Set;
 
 import com.safetynet.mickael.dto.MedicalRecordDTO;
-import com.safetynet.mickael.model.MedicalRecord;
 
 public interface MedicalRecordService {
 
-	Iterable<MedicalRecord> list();
-	MedicalRecord save(MedicalRecord medicalRecord);
-	Iterable<MedicalRecord> save(List<MedicalRecordDTO> medicalRecords);
-	
+	void save(MedicalRecordDTO dto);
+
+	void save(Set<MedicalRecordDTO> dtos);
+
 }

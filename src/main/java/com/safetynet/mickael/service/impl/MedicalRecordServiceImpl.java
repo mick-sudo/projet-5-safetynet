@@ -1,62 +1,89 @@
 package com.safetynet.mickael.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.mickael.dto.MedicalRecordDTO;
+import com.safetynet.mickael.dto.PersonDTO;
 import com.safetynet.mickael.model.Allergie;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Medication;
+import com.safetynet.mickael.model.Person;
+import com.safetynet.mickael.model.pk.PersonPk;
 import com.safetynet.mickael.repository.MedicalRecordRepository;
+import com.safetynet.mickael.repository.PersonRepository;
 import com.safetynet.mickael.service.MedicalRecordService;
 
 @Service
-public class MedicalRecordServiceImpl  implements MedicalRecordService {
+public class MedicalRecordServiceImpl implements MedicalRecordService {
 
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
+	@Autowired
+	private PersonRepository personRepository;
 
-	public Iterable<MedicalRecord> list() {
-		return medicalRecordRepository.findAll();
-	}
+	private MedicalRecord convertMedicalRecordDTOTomedicalRecord(MedicalRecordDTO dto) {
+		MedicalRecord medicaleRecord = new MedicalRecord();
+		medicaleRecord.setFirstName(dto.getFirstName());
+		medicaleRecord.setLastName(dto.getLastName());
 
-	public MedicalRecord save(MedicalRecord medicalRecord) {
-		return medicalRecordRepository.save(medicalRecord);
-	}
-
-	public Iterable<MedicalRecord> save(List<MedicalRecordDTO> medicalRecords) {
-		List<MedicalRecord> listeMedicalRecords = new ArrayList<>();
-		
-		for (MedicalRecordDTO dto : medicalRecords) {
-			MedicalRecord medicalRecord = new MedicalRecord();
-			medicalRecord.setFirstName(dto.getFirstName());
-			medicalRecord.setLastName(dto.getLastName());
-			medicalRecord.setBirthdate(dto.getBirthdate());
-			
-			Set<Medication> setmedication = new HashSet<>();
-			for (String medication : dto.getMedications()) {
-				Medication m = new Medication();
-				m.setName(medication);
-				setmedication.add(m);
-			}
-			
-			medicalRecord.setMedications(setmedication);
-			
-			Set<Allergie> setallergie = new HashSet<>();
-			for (String allergie : dto.getAllergies()) {
-				Allergie a = new Allergie();
-				a.setName(allergie);
-				setallergie.add(a);
-			}
-			
-			medicalRecord.setAllergies(setallergie);
-			listeMedicalRecords.add(medicalRecord);
+		Set<Medication> medications = new HashSet<>();
+		for (String med : dto.getMedications()) {
+			Medication medication = new Medication();
+			medication.setName(med);
+			medications.add(medication);
 		}
-		return medicalRecordRepository.saveAll(listeMedicalRecords);
+
+		medicaleRecord.setMedications(medications);
+
+		Set<Allergie> allergies = new HashSet<>();
+		for (String all : dto.getAllergies()) {
+			Allergie allergie = new Allergie();
+			allergie.setName(all);
+			allergies.add(allergie);
+		}
+
+		medicaleRecord.setAllergies(allergies);
+
+		// recuperation de la personne si elle existe
+		PersonPk pk = new PersonPk();
+		pk.setFirstName(dto.getFirstName());
+		pk.setLastName(dto.getLastName());
+
+		Optional<Person> optionalPerson = this.personRepository.findById(pk);
+		if (optionalPerson.isPresent()) {
+			Person p = optionalPerson.get();
+			p.setBirthdate(dto.getBirthdate());
+			medicaleRecord.setPerson(p);
+		} else {
+			Person p = new Person();
+			p.setFirstName(dto.getFirstName());
+			p.setLastName(dto.getLastName());
+			p.setBirthdate(dto.getBirthdate());
+			medicaleRecord.setPerson(p);
+		}
+		return medicaleRecord;
+	}
+
+	@Override
+	public void save(MedicalRecordDTO dto) {
+		MedicalRecord medicalRecord = this.convertMedicalRecordDTOTomedicalRecord(dto);
+		this.medicalRecordRepository.save(medicalRecord);
+	}
+
+	@Override
+	public void save(Set<MedicalRecordDTO> dtos) {
+		Set<MedicalRecord> medicalRecords = new HashSet<>();
+
+		for (MedicalRecordDTO dto : dtos) {
+			MedicalRecord p = this.convertMedicalRecordDTOTomedicalRecord(dto);
+			medicalRecords.add(p);
+		}
+
+		this.medicalRecordRepository.saveAll(medicalRecords);
 	}
 }

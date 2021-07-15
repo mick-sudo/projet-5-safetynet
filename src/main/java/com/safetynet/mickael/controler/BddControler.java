@@ -8,24 +8,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.mickael.dto.BddDTO;
 import com.safetynet.mickael.dto.FirestationDTO;
-import com.safetynet.mickael.dto.PersonDTO;
-import com.safetynet.mickael.service.PersonService;
+import com.safetynet.mickael.service.BddService;
 
 @RestController
-@RequestMapping("/person")
-public class PersonControler {
-
+@RequestMapping("/bdd")
+public class BddControler {
+	
 	@Autowired
-	private PersonService personService;
-
-	@PostMapping("/save/person")
-	public void save(@RequestBody PersonDTO dto) {
-		this.personService.save(dto);
-	}
+	private BddService bddService;
 	
 	@PostMapping("/save")
-	public void save(@RequestBody Set<PersonDTO> dtos) {
-		this.personService.save(dtos);
+	public void save(@RequestBody BddDTO dto) {
+		this.bddService.save(dto);
 	}
 }

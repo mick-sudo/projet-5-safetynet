@@ -1,10 +1,9 @@
 package com.safetynet.mickael.model;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,17 +17,14 @@ public class Person {
 	private String firstName;
 	@Id
 	private String lastName;
-	
-	@ManyToOne
-	@JoinColumn(name = "address", referencedColumnName = "address")
-	@Column(insertable=false, updatable=false)
-	private Firestation firestation;
-	private String address;
-	
-	private String city;
-	private String zip;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Address address;
+
 	private String phone;
 	private String email;
+
+	private String birthdate;
 
 	// constructeur par défaut
 	public Person() {
@@ -51,30 +47,6 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -91,11 +63,51 @@ public class Person {
 		this.email = email;
 	}
 
-	public Firestation getFirestation() {
-		return firestation;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setFirestation(Firestation firestation) {
-		this.firestation = firestation;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
+
+	public String getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		return true;
+	}
+
 }

@@ -1,43 +1,56 @@
 package com.safetynet.mickael.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.mickael.dto.PersonDTO;
+import com.safetynet.mickael.model.Address;
 import com.safetynet.mickael.model.Person;
 import com.safetynet.mickael.repository.PersonRepository;
 import com.safetynet.mickael.service.PersonService;
 
 @Service
 public class PersonServiceImpl implements PersonService {
+
 	@Autowired
 	private PersonRepository personRepository;
 
-	public Iterable<Person> list() {
-		return personRepository.findAll();
-	}
+	private Person convertPersonDTOToperson(PersonDTO dto) {
+		Person person = new Person();
+		person.setFirstName(dto.getFirstName());
+		person.setLastName(dto.getLastName());
+		person.setEmail(dto.getEmail());
+		person.setPhone(dto.getPhone());
 
-	public Person save(Person person) {
-		return personRepository.save(person);
-	}
+		Address address = new Address();
+		address.setAddress(dto.getAddress());
+		address.setCity(dto.getCity());
+		address.setZip(dto.getZip());
 
-	public Iterable<Person> save(List<Person> persons) {
-		return personRepository.saveAll(persons);
+		person.setAddress(address);
+
+		return person;
 	}
 
 	@Override
-	public List<String> getCommunityMail(String city) {
-		List<Person> listPersons = personRepository.findPersonsByCity(city);
-		List<String> listEmails = new ArrayList<String>();
-		
-		for (Person person : listPersons) {
-			listEmails.add(person.getEmail());
-		}
-		
-		return listEmails;
+	public void save(PersonDTO dto) {
+		Person person = this.convertPersonDTOToperson(dto);
+		this.personRepository.save(person);
 	}
-	
+
+	@Override
+	public void save(Set<PersonDTO> dtos) {
+		Set<Person> persons = new HashSet<>();
+
+		for (PersonDTO dto : dtos) {
+			Person p = this.convertPersonDTOToperson(dto);
+			persons.add(p);
+		}
+
+		this.personRepository.saveAll(persons);
+	}
 
 }

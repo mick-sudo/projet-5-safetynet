@@ -7,5 +7,4 @@ import com.safetynet.mickael.model.pk.PersonPk;
 
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, PersonPk>{
 
-
 }

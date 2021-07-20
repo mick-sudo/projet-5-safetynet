@@ -14,7 +14,7 @@ import com.safetynet.mickael.service.FirestationService;
 @RestController
 @RequestMapping("/firestation")
 public class FirestationController {
-	
+
 	@Autowired
 	private FirestationService firestationService;
 
@@ -22,7 +22,7 @@ public class FirestationController {
 	public void save(@RequestBody FirestationDTO dto) {
 		this.firestationService.save(dto);
 	}
-	
+
 	@PostMapping("/save")
 	public void save(@RequestBody Set<FirestationDTO> dtos) {
 		this.firestationService.save(dtos);

@@ -1,7 +1,5 @@
 package com.safetynet.mickael.dto;
 
-import com.safetynet.mickael.model.Address;
-
 public class PersonDTO {
 
 	private String firstName;
@@ -11,6 +9,7 @@ public class PersonDTO {
 	private String email;
 	private String zip;
 	private String city;
+	private int age;
 
 	public String getFirstName() {
 		return firstName;
@@ -66,6 +65,14 @@ public class PersonDTO {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	@Override

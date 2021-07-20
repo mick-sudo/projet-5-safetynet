@@ -1,8 +1,10 @@
 package com.safetynet.mickael.model;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Address {
@@ -12,6 +14,9 @@ public class Address {
 	
 	private String city;
 	private String zip;
+	
+	@OneToMany(mappedBy = "address")
+	private Set<Person> persons;
 
 	public String getAddress() {
 		return address;
@@ -35,6 +40,14 @@ public class Address {
 
 	public void setZip(String zip) {
 		this.zip = zip;
+	}
+
+	public Set<Person> getPersons() {
+		return persons;
+	}
+
+	public void setPersons(Set<Person> persons) {
+		this.persons = persons;
 	}
 
 	@Override

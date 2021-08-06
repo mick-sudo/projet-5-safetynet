@@ -6,45 +6,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safetynet.mickael.dto.FireAddressDTO;
-import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
-import com.safetynet.mickael.repository.FirestationRepository;
-import com.safetynet.mickael.repository.MedicalRecordRepository;
-import com.safetynet.mickael.repository.PersonRepository;
-import com.safetynet.mickael.service.PersonService;
+import com.safetynet.mickael.repository.DataRepository;
+import com.safetynet.mickael.service.IPersonService;
 
 @Service
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl implements IPersonService {
 
 	@Autowired
-	private PersonRepository personRepository;
-
-	@Autowired
-	private FirestationRepository firestationRepository;
+	private DataRepository dataRepository;
 	
-	@Autowired
-	private MedicalRecordRepository medicalRepository;
-
-
 	@Override
-	public List<FireAddressDTO> findFireByAdress(String address) {
-		List<FireAddressDTO> fireAddressDTO = new ArrayList<FireAddressDTO>();
-		for(Person person : personRepository.findbyAddress(address)) {
-			
-			FireAddressDTO dto = new FireAddressDTO();
-			dto.setFirstName(person.getFirstName());
-			dto.setLastName(person.getLastName());
-			dto.setPhone(person.getPhone());
-			MedicalRecord medicalRecordPerson = medicalRepository.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
-			dto.setAllergies(medicalRecordPerson.getAllergies());
-			dto.setMedications(medicalRecordPerson.getMedications());
-			dto.setAge(15);
-			
-			dto.setStation(address);
+	public List<String> getCommunityEmail(String city) {
+		List<String> emails = new ArrayList<String>();
+		List<Person> persons = dataRepository.getPersonByCity(city);
+		
+		for(Person person : persons) {
+			emails.add(person.getEmail());
 		}
-		return fireAddressDTO;
+		return emails;
 	}
-	
+
+
 	
 }

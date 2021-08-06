@@ -1,5 +1,6 @@
 package com.safetynet.mickael.controler;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,17 +8,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.mickael.dto.FireAddressDTO;
-import com.safetynet.mickael.service.PersonService;
+import com.safetynet.mickael.service.IPersonService;
 
 @RestController
 public class ExerciceController {
 
 	@Autowired
-	private PersonService personService;
+	private IPersonService personService;
 
-	@GetMapping("/fire")
-	public List<FireAddressDTO> findFireByAddress(@RequestParam String address) {
-		return this.personService.findFireByAdress(address);
+	
+	@GetMapping("communityEmail")
+	public List<String> getCommunityEmail(@RequestParam String city){
+		return personService.getCommunityEmail(city);
 	}
+	
 }

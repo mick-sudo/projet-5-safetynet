@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.mickael.dto.ChildAlertDTO;
 import com.safetynet.mickael.service.IPersonService;
 
 @RestController
@@ -20,6 +21,11 @@ public class ExerciceController {
 	@GetMapping("communityEmail")
 	public List<String> getCommunityEmail(@RequestParam String city){
 		return personService.getCommunityEmail(city);
+	}
+	
+	@GetMapping("childAlert")
+	public List<ChildAlertDTO> getChildAlert(@RequestParam String address){
+		return personService.getChildAlert(address);
 	}
 	
 }

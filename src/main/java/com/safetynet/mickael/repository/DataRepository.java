@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.mickael.exception.DataRepositoryException;
 import com.safetynet.mickael.model.Database;
+import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
 
 @Repository
@@ -100,6 +100,20 @@ public class DataRepository {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Person> getFamilyMemberByLastName(String lastName){
+		return database.getPersons().stream().filter(person -> person.getLastName().equalsIgnoreCase(lastName))
+				.collect(Collectors.toList());
+	}
 	
+	public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
+        MedicalRecord medicalRecordResult = new MedicalRecord();
+        for (MedicalRecord medicalRecord : database.getMedicalrecords()) {
+            if (medicalRecord.getFirstName().equalsIgnoreCase(firstName) && medicalRecord.getLastName().equalsIgnoreCase(lastName)) {
+                medicalRecordResult = medicalRecord;
+            }
+        }
+        return medicalRecordResult;
+    }
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.mickael.dto.ChildAlertDTO;
+import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
@@ -79,6 +80,27 @@ public class PersonServiceImpl implements IPersonService {
 		}
 		
 		return personInfoDTOs;
+	}
+
+	@Override
+	public List<FireDTO> getPersonByAddress(String address) {
+		List<FireDTO> fireDTOs = new ArrayList<FireDTO>();
+		List<Person> persons = dataRepository.getPersonByAddress(address);
+		for (Person person :persons) {
+			MedicalRecord medicalRecord = dataRepository.getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+			int age = PersonUtils.getAge(medicalRecord.getBirthdate());
+			FireDTO fireDTO = new FireDTO();
+			fireDTO.setFirstName(person.getFirstName());
+			fireDTO.setLastName(person.getLastName());
+			fireDTO.setPhone(person.getPhone());
+			fireDTO.setAge(age);
+			fireDTO.setMedications(medicalRecord.getMedications());
+			fireDTO.setAllergies(medicalRecord.getAllergies());
+			
+			fireDTOs.add(fireDTO);
+		}
+		
+		return fireDTOs;
 	}
 
 

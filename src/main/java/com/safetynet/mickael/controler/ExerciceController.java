@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.mickael.dto.ChildAlertDTO;
+import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
 import com.safetynet.mickael.service.IPersonService;
 
@@ -32,4 +33,10 @@ public class ExerciceController {
 	public List<PersonInfoDTO> getPersonInfo(@RequestParam String firstName,String lastName){
 		return personService.getpersonInfo(firstName, lastName);
 	}
+	
+	@GetMapping("fire")
+	public List<FireDTO> getPersonByAddress(@RequestParam String address){
+		return personService.getPersonByAddress(address);
+	}
+	
 }

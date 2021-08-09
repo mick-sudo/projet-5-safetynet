@@ -1,6 +1,5 @@
 package com.safetynet.mickael.controler;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.mickael.dto.ChildAlertDTO;
+import com.safetynet.mickael.dto.PersonInfoDTO;
 import com.safetynet.mickael.service.IPersonService;
 
 @RestController
@@ -28,4 +28,8 @@ public class ExerciceController {
 		return personService.getChildAlert(address);
 	}
 	
+	@GetMapping("personInfo")
+	public List<PersonInfoDTO> getPersonInfo(@RequestParam String firstName,String lastName){
+		return personService.getpersonInfo(firstName, lastName);
+	}
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.mickael.dto.ChildAlertDTO;
+import com.safetynet.mickael.dto.PersonInfoDTO;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
 import com.safetynet.mickael.repository.DataRepository;
@@ -57,5 +58,28 @@ public class PersonServiceImpl implements IPersonService {
 
 		return childAlertDTOs;
 	}
+
+	@Override
+	public List<PersonInfoDTO> getpersonInfo(String firstName, String lastName) {
+		List<PersonInfoDTO> personInfoDTOs = new ArrayList<PersonInfoDTO>();
+		List<Person> persons = dataRepository.getPersonByLastNameAndFirsName(lastName, firstName);
+		for (Person person :persons) {
+			MedicalRecord medicalRecord = dataRepository.getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+			int age = PersonUtils.getAge(medicalRecord.getBirthdate());
+			PersonInfoDTO personInfoDTO = new PersonInfoDTO();
+			personInfoDTO.setFirstName(person.getFirstName());
+			personInfoDTO.setLastName(person.getLastName());
+			personInfoDTO.setAddress(person.getAddress());
+			personInfoDTO.setAge(age);
+			personInfoDTO.setEmail(person.getEmail());
+			personInfoDTO.setAllergies(medicalRecord.getAllergies());
+			personInfoDTO.setMedications(medicalRecord.getMedications());
+			
+			personInfoDTOs.add(personInfoDTO);
+		}
+		
+		return personInfoDTOs;
+	}
+
 
 }

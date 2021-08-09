@@ -105,6 +105,12 @@ public class DataRepository {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Person> getPersonByLastNameAndFirsName(String lastName, String firstName){
+		return database.getPersons().stream().filter(person -> person.getLastName().equalsIgnoreCase(lastName))
+				.collect(Collectors.toList());
+	}
+	
+	
 	public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
         MedicalRecord medicalRecordResult = new MedicalRecord();
         for (MedicalRecord medicalRecord : database.getMedicalrecords()) {

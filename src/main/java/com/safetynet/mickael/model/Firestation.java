@@ -3,9 +3,9 @@ package com.safetynet.mickael.model;
 public class Firestation {
 
 	private String address;
-	private Integer station;
+	private String station;
 
-	public Firestation(String address, Integer station) {
+	public Firestation(String address, String station) {
 
 		this.address = address;
 		this.station = station;
@@ -23,11 +23,12 @@ public class Firestation {
 		this.address = address;
 	}
 
-	public Integer getStation() {
+
+	public String getStation() {
 		return station;
 	}
 
-	public void setStation(Integer station) {
+	public void setStation(String station) {
 		this.station = station;
 	}
 

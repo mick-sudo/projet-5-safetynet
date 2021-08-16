@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.safetynet.mickael.dto.ChildAlertDTO;
 import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
+import com.safetynet.mickael.model.Firestation;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
 import com.safetynet.mickael.repository.DataRepository;
@@ -88,6 +89,7 @@ public class PersonServiceImpl implements IPersonService {
 		List<Person> persons = dataRepository.getPersonByAddress(address);
 		for (Person person :persons) {
 			MedicalRecord medicalRecord = dataRepository.getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+			Firestation firestation = dataRepository.getStationByAddress(person.getAddress());
 			int age = PersonUtils.getAge(medicalRecord.getBirthdate());
 			FireDTO fireDTO = new FireDTO();
 			fireDTO.setFirstName(person.getFirstName());
@@ -96,7 +98,7 @@ public class PersonServiceImpl implements IPersonService {
 			fireDTO.setAge(age);
 			fireDTO.setMedications(medicalRecord.getMedications());
 			fireDTO.setAllergies(medicalRecord.getAllergies());
-			
+			fireDTO.setStation(firestation.getStation());
 			fireDTOs.add(fireDTO);
 		}
 		

@@ -2,8 +2,8 @@ package com.safetynet.mickael.service;
 
 import java.util.List;
 
-import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.ChildAlertDTO;
+import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
 
 public interface IPersonService {
@@ -16,6 +16,8 @@ public interface IPersonService {
 
 	List<FireDTO> getPersonByAddress(String address);
 
+
 	
 }
+
 

@@ -8,8 +8,13 @@ public class FireDTO {
 	private String lastName;
 	private String phone;
 	private int age;
+	private String station;
 	private List<String> medications = new ArrayList<>();
 	private List<String> allergies = new ArrayList<>();
+
+	public FireDTO() {
+		super();
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -57,6 +62,14 @@ public class FireDTO {
 
 	public void setAllergies(List<String> allergies) {
 		this.allergies = allergies;
+	}
+
+	public String getStation() {
+		return station;
+	}
+
+	public void setStation(String station) {
+		this.station = station;
 	}
 
 }

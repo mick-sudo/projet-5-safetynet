@@ -132,6 +132,19 @@ public class DataRepository {
 
 	}
 
+	public List<MedicalRecord> getAllMedicalRecord() {
+		return database.getMedicalrecords();
+	}
+
+    public Person getPersonByName(String firstName, String lastName) {
+        Person personResult = new Person();
+        for (Person person : database.getPersons()) {
+            if (person.getFirstName().equalsIgnoreCase(firstName) && person.getLastName().equalsIgnoreCase(lastName)) {
+                personResult = person;
+            }
+        }
+        return personResult;
+    }
 	public List<Firestation> getAllStation() {
 		return database.getFirestations();
 	}
@@ -139,15 +152,14 @@ public class DataRepository {
 	public List<Firestation> getFirestationByStation(String firestation) {
 
 		return database.getFirestations().stream()
-				.filter(fireStation -> fireStation.getStation().equalsIgnoreCase(firestation)).collect(Collectors.toList());
+				.filter(fireStation -> fireStation.getStation().equalsIgnoreCase(firestation))
+				.collect(Collectors.toList());
 
 	}
-	
 
 	public List<String> getListFireStation(List<String> stationNumber) {
 		return database.getFirestations().stream()
-                .filter(fireStation -> stationNumber.contains(fireStation.getStation()))
-                .map(Firestation::getAddress)
-                .collect(Collectors.toList());
+				.filter(fireStation -> stationNumber.contains(fireStation.getStation())).map(Firestation::getAddress)
+				.collect(Collectors.toList());
 	}
 }

@@ -21,7 +21,7 @@ public class PersonDaoImpl implements PersonDao{
         logger.info("createPerson : person ajouter a la liste des persons");
         // commit pour appliquer les changements dans le json
         dataRepository.commit();
-        logger.info("createperson: commit de la person creer");
+        logger.info("createperson: person ajouter");
         return true;
     }
 

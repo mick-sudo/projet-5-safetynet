@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.safetynet.mickael.dto.CoverageDTO;
 import com.safetynet.mickael.dto.FoyerDTO;
+import com.safetynet.mickael.model.Firestation;
+
 
 public interface IFirestationService {
 
@@ -12,6 +14,6 @@ public interface IFirestationService {
 	List<CoverageDTO> getCoverageByFireStation(String stationNumber);
 
 	List<FoyerDTO> getFoyerByFireStation(List<String> stations);
-	
+
 
 }

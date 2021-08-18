@@ -22,9 +22,10 @@ public class FirestationServiceImpl implements IFirestationService {
 
 	@Autowired
 	private DataRepository dataRepository;
-	
+
 	@Autowired
 	private IPersonService personService;
+
 
 	@Override
 	public List<String> getPhoneByStation(String firestation) {
@@ -74,7 +75,7 @@ public class FirestationServiceImpl implements IFirestationService {
 	public List<FoyerDTO> getFoyerByFireStation(List<String> stationNumber) {
 		List<FoyerDTO> foyerDTOs = new ArrayList<FoyerDTO>();
 		List<String> listAddress = dataRepository.getListFireStation(stationNumber);
-		for(String address : listAddress) {
+		for (String address : listAddress) {
 			FoyerDTO foyerDTO = new FoyerDTO();
 			List<FireDTO> fireDTOs = personService.getPersonByAddress(address);
 			foyerDTO.setAddress(address);
@@ -83,5 +84,6 @@ public class FirestationServiceImpl implements IFirestationService {
 		}
 		return foyerDTOs;
 	}
+
 
 }

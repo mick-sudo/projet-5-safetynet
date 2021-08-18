@@ -142,6 +142,7 @@ public class DataRepository {
 				.filter(fireStation -> fireStation.getStation().equalsIgnoreCase(firestation)).collect(Collectors.toList());
 
 	}
+	
 
 	public List<String> getListFireStation(List<String> stationNumber) {
 		return database.getFirestations().stream()

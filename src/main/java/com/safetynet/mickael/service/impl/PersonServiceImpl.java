@@ -3,12 +3,16 @@ package com.safetynet.mickael.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.mickael.dao.PersonDao;
 import com.safetynet.mickael.dto.ChildAlertDTO;
 import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
+import com.safetynet.mickael.exception.DataAlreadyExistException;
+import com.safetynet.mickael.exception.DataNotFoundException;
 import com.safetynet.mickael.model.Firestation;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
@@ -19,9 +23,14 @@ import com.safetynet.mickael.utils.PersonUtils;
 @Service
 public class PersonServiceImpl implements IPersonService {
 
-	@Autowired
-	private DataRepository dataRepository;
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(PersonServiceImpl.class);
 
+    @Autowired
+    private DataRepository dataRepository;
+
+    @Autowired
+    private PersonDao personDao;
+	
 	@Override
 	public List<String> getCommunityEmail(String city) {
 		List<String> emails = new ArrayList<String>();
@@ -104,6 +113,37 @@ public class PersonServiceImpl implements IPersonService {
 		
 		return fireDTOs;
 	}
+
+
+
+    @Override
+    public boolean createPerson(Person person) {
+        // verification que la person n'existe pas dans la DAO(datarepository)
+        if (!dataRepository.getAllPerson().contains(person)) {
+            personDao.createPerson(person);
+            logger.info("createPerson : laperson à été creer");
+            return true;
+        } else {
+            logger.error("La personne " + person.getFirstName() + " " + person.getLastName() + "existe déja");
+            throw new DataAlreadyExistException("La personne " + person.getFirstName() + " " + person.getLastName() + "existe déja");
+        }
+    }
+
+    @Override
+    public boolean updatePerson(Person person) {
+        if (!personDao.updatePerson(person)) {
+            throw new DataNotFoundException("La personne " + person.getFirstName() + " " + person.getLastName() + "n'existe pas");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deletePerson(Person person) {
+        if (!personDao.deletePerson(person)) {
+            throw new DataNotFoundException("La personne " + person.getFirstName() + " " + person.getLastName() + "n'existe pas");
+        }
+        return true;
+    }
 
 
 }

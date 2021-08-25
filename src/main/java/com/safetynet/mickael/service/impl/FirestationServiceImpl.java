@@ -6,9 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.mickael.dao.FirestationDao;
 import com.safetynet.mickael.dto.CoverageDTO;
 import com.safetynet.mickael.dto.FireDTO;
 import com.safetynet.mickael.dto.FoyerDTO;
+import com.safetynet.mickael.exception.DataAlreadyExistException;
+import com.safetynet.mickael.exception.DataNotFoundException;
+import com.safetynet.mickael.exception.InvalidArgumentException;
 import com.safetynet.mickael.model.Firestation;
 import com.safetynet.mickael.model.MedicalRecord;
 import com.safetynet.mickael.model.Person;
@@ -16,6 +20,8 @@ import com.safetynet.mickael.repository.DataRepository;
 import com.safetynet.mickael.service.IFirestationService;
 import com.safetynet.mickael.service.IPersonService;
 import com.safetynet.mickael.utils.PersonUtils;
+
+import io.micrometer.core.instrument.util.StringUtils;
 
 @Service
 public class FirestationServiceImpl implements IFirestationService {
@@ -26,6 +32,8 @@ public class FirestationServiceImpl implements IFirestationService {
 	@Autowired
 	private IPersonService personService;
 
+    @Autowired
+    private FirestationDao fireStationDao;
 
 	@Override
 	public List<String> getPhoneByStation(String firestation) {
@@ -84,6 +92,38 @@ public class FirestationServiceImpl implements IFirestationService {
 		}
 		return foyerDTOs;
 	}
+
+	@Override
+    public boolean createFireStation(Firestation fireStation) {
+
+        // verification que la fireStation n'existe pas dans la DAO(datarepository)
+        if (!StringUtils.isEmpty(fireStation.getStation()) && !StringUtils.isEmpty(fireStation.getAddress())) {
+
+            if (!dataRepository.getAllStation().contains(fireStation)) {
+                fireStationDao.createFireStation(fireStation);
+                return true;
+            } else {
+                throw new DataAlreadyExistException("La fireStation " + fireStation.getStation() + " " + fireStation.getAddress() + "existe déja");
+            }
+        }
+        throw new InvalidArgumentException(" fireStation non creer" + fireStation.getStation() + " " + fireStation.getAddress() + " adresse ou station vide ");
+    }
+
+    @Override
+    public boolean updateFireStation(Firestation fireStation) {
+        if (!fireStationDao.updateFireStation(fireStation)) {
+            throw new DataNotFoundException("La fireStation " + fireStation.getStation() + " " + fireStation.getAddress() + "n'existe pas");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteFireStation(Firestation fireStation) {
+        if (!fireStationDao.deleteFireStation(fireStation)) {
+            throw new DataNotFoundException("La fireStation " + fireStation.getStation() + " " + fireStation.getAddress() + "n'existe pas");
+        }
+        return true;
+    }
 
 
 }

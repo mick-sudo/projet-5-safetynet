@@ -35,7 +35,7 @@ public class DataRepository {
 		this.init();
 	}
 
-	public static Database getDatabase() {
+	public Database getDatabase() {
 		return database;
 	}
 

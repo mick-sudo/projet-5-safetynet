@@ -6,7 +6,6 @@ import com.safetynet.mickael.dto.CoverageDTO;
 import com.safetynet.mickael.dto.FoyerDTO;
 import com.safetynet.mickael.model.Firestation;
 
-
 public interface IFirestationService {
 
 	List<String> getPhoneByStation(String firestation);
@@ -15,5 +14,10 @@ public interface IFirestationService {
 
 	List<FoyerDTO> getFoyerByFireStation(List<String> stations);
 
+	boolean createFireStation(Firestation fireStation);
+
+	boolean updateFireStation(Firestation fireStation);
+
+	boolean deleteFireStation(Firestation fireStation);
 
 }

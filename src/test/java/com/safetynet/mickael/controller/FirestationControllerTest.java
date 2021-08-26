@@ -182,5 +182,19 @@ public class FirestationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isResetContent());
     }
     
+    void deleteFireStationWhenIsNotFound() throws Exception{
+    	
+        ObjectMapper obm = new ObjectMapper();
+        ObjectNode jsonFireStation = obm.createObjectNode();
+        
+        jsonFireStation.set("station", TextNode.valueOf(StationTest));
+        jsonFireStation.set("address", TextNode.valueOf(AddressTest));
+        
+        mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonFireStation.toString()))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        
+    }
 
 }

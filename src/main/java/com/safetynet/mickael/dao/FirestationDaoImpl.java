@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.safetynet.mickael.model.Firestation;
 import com.safetynet.mickael.repository.DataRepository;
 
+
 @Service
 public class FirestationDaoImpl implements FirestationDao{
 

@@ -17,6 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.safetynet.mickael.dao.FirestationDaoImpl;
+import com.safetynet.mickael.dto.FireDTO;
+import com.safetynet.mickael.dto.FoyerDTO;
 import com.safetynet.mickael.exception.DataAlreadyExistException;
 import com.safetynet.mickael.exception.DataNotFoundException;
 import com.safetynet.mickael.exception.InvalidArgumentException;
@@ -31,6 +33,9 @@ public class FirestationServiceTest {
 
     @Autowired
     IFirestationService fireStationService;
+    
+    @MockBean
+    IPersonService personService;
 
     @MockBean
     FirestationDaoImpl firestationDaoMock;
@@ -51,7 +56,7 @@ public class FirestationServiceTest {
     Person obama = new Person("Barack", "obama", "WhiteHouse", "Washinton DC", "1232111","06755" , "obama@mohamed.com");
     Person biden = new Person("joe", "biden", "BlackHouse", "Washinton DC", "1232111","06754" , "biden@mohamed.com");
     Person trump = new Person("Donald", "trump", "CasinoHouse", "Washinton DC", "1232111", "06753","trump@mohamed.com");
-
+   
     List<String> medication = List.of("a,b,c,d");
     List<String> allergies = List.of("q,s,d,d");
 
@@ -180,4 +185,47 @@ public class FirestationServiceTest {
             assert (dnfe.getMessage().contains("n'existe pas"));
         }
     }
+    
+    @Test
+    public void getPhoneByStationTest() {
+    	List<Person> persons = new ArrayList<Person>();
+    	persons.add(biden);
+    	persons.add(obama);
+    	persons.add(trump);
+    	List<Firestation> firestations= new ArrayList<>();
+    	firestations.add(firestation1);
+    	Mockito.when(dataRepository.getAllPerson()).thenReturn(persons);
+    	Mockito.when(dataRepository.getFirestationByStation("1")).thenReturn(firestations);
+    	List<String> phones =  fireStationService.getPhoneByStation("1");
+    	Assertions.assertEquals(phones.size(), 1);
+    	Assertions.assertEquals(phones.get(0), persons.get(1).getPhone());
+    	
+    	
+    }
+    
+    @Test
+    public void getFoyerByFireStationTest() {
+    	List<String> addreList = new ArrayList<String>();
+    	addreList.add("WhiteHouse");
+    	Mockito.when(dataRepository.getListFireStation(List.of("1"))).thenReturn(addreList);
+    	FireDTO fireDTO = new FireDTO();
+    	fireDTO.setAge(9);
+    	fireDTO.setFirstName("chris");
+    	fireDTO.setLastName("redfield");
+    	fireDTO.setAllergies(allergies);
+    	fireDTO.setMedications(medication);
+    	fireDTO.setPhone("1234");
+    	fireDTO.setStation("1");
+    	List<FireDTO> fireDTOs = new ArrayList<FireDTO>();
+    	fireDTOs.add(fireDTO);
+    	Mockito.when(personService.getPersonByAddress("WhiteHouse")).thenReturn(fireDTOs);
+    	
+    	List<FoyerDTO> result = fireStationService.getFoyerByFireStation(List.of("1"));
+    	
+    	org.junit.jupiter.api.Assertions.assertEquals(result.size(), 1);
+    	FoyerDTO foyerDTO = result.get(0);
+    	org.junit.jupiter.api.Assertions.assertEquals(foyerDTO.getAddress(), "WhiteHouse");
+    	org.junit.jupiter.api.Assertions.assertEquals(foyerDTO.getFirePerson(), fireDTOs);
+    }
+    
 }

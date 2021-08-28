@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.safetynet.mickael.dao.MedicalRecordDao;
 import com.safetynet.mickael.dao.PersonDao;
+import com.safetynet.mickael.dto.ChildAlertDTO;
 import com.safetynet.mickael.dto.PersonInfoDTO;
 import com.safetynet.mickael.exception.DataAlreadyExistException;
 import com.safetynet.mickael.exception.DataNotFoundException;
@@ -35,7 +36,7 @@ import com.safetynet.mickael.repository.DataRepository;
 @ExtendWith(SpringExtension.class)
 public class PersonServiceTest {
 	@Autowired
-	IPersonService personServiceTest;
+	IPersonService personService;
 
 	@MockBean
 	DataRepository dataRepository;
@@ -64,7 +65,7 @@ public class PersonServiceTest {
 		Mockito.when(dataRepository.getAllPerson()).thenReturn(persons);
 
 		// then
-		Assertions.assertThat(personServiceTest.createPerson(chris));
+		Assertions.assertThat(personService.createPerson(chris));
 
 		verify(personDao, Mockito.times(1)).createPerson((chris));
 
@@ -82,7 +83,7 @@ public class PersonServiceTest {
 
 		// then
 		try {
-			Assertions.assertThat(personServiceTest.createPerson(chris));
+			Assertions.assertThat(personService.createPerson(chris));
 			verify(personDao, Mockito.times(0)).createPerson(any());
 		} catch (DataAlreadyExistException eExp) {
 			assert (eExp.getMessage().contains("existe déja"));
@@ -97,7 +98,7 @@ public class PersonServiceTest {
 		Mockito.when(personDao.updatePerson(any(Person.class))).thenReturn(true);
 
 		// then
-		Assertions.assertThat(personServiceTest.updatePerson(chris));
+		Assertions.assertThat(personService.updatePerson(chris));
 
 		verify(personDao, Mockito.times(1)).updatePerson((chris));
 
@@ -112,7 +113,7 @@ public class PersonServiceTest {
 		// THEN
 		// On crée un personne qui existe
 		try {
-			Assertions.assertThat(personServiceTest.updatePerson(chris));
+			Assertions.assertThat(personService.updatePerson(chris));
 			verify(personDao, Mockito.times(1)).updatePerson(any());
 		} catch (DataNotFoundException eExp) {
 			assert (eExp.getMessage().contains("n'existe pas"));
@@ -125,7 +126,7 @@ public class PersonServiceTest {
 		Mockito.when(personDao.deletePerson(any(Person.class))).thenReturn(true);
 
 		// then
-		Assertions.assertThat(personServiceTest.deletePerson(chris));
+		Assertions.assertThat(personService.deletePerson(chris));
 
 		verify(personDao, Mockito.times(1)).deletePerson((chris));
 	}
@@ -139,7 +140,7 @@ public class PersonServiceTest {
 		// THEN
 		// On crée un personne qui existe
 		try {
-			Assertions.assertThat(personServiceTest.deletePerson(chris));
+			Assertions.assertThat(personService.deletePerson(chris));
 			verify(personDao, Mockito.times(1)).deletePerson(any());
 		} catch (DataNotFoundException eExp) {
 			assert (eExp.getMessage().contains("n'existe pas"));
@@ -152,9 +153,40 @@ public class PersonServiceTest {
 		// Given
 		Mockito.when(dataRepository.getPersonByCity(city)).thenReturn(List.of(chris, jill));
 		// when
-		Collection<String> emails = personServiceTest.getCommunityEmail(city);
+		Collection<String> emails = personService.getCommunityEmail(city);
 		// then
 		assertThat(emails).containsExactlyInAnyOrderElementsOf(List.of(chris.getEmail(), jill.getEmail()));
 	}
 	
+	@Test
+	public void getChildAlertTest() throws Exception {
+		// Préparation du jeu de tests
+		List<Person> persons = new ArrayList<Person>();
+		persons.add(chris);
+		Mockito.when(dataRepository.getPersonByAddress("californie")).thenReturn(persons);
+		
+		MedicalRecord medicalRecord = new MedicalRecord();
+		medicalRecord.setAllergies(allergies);
+		medicalRecord.setMedications(medication);
+		medicalRecord.setFirstName("chris");
+		medicalRecord.setLastName("redfield");
+		medicalRecord.setBirthdate("28/05/2010");
+		Mockito.when(dataRepository.getMedicalRecordByFirstNameAndLastName("chris","redfield")).thenReturn(medicalRecord);
+
+		List<Person> familyMember = new ArrayList<Person>();
+		Mockito.when(dataRepository.getFamilyMemberByLastName("redfield")).thenReturn(familyMember);
+		
+		// Appel de la méthode à tester
+		List<ChildAlertDTO> result = personService.getChildAlert("californie");
+		
+		// Vérifier les données du résultat
+		org.junit.jupiter.api.Assertions.assertEquals(result.size(), 1);
+		
+		ChildAlertDTO childAlertDTO = result.get(0);
+		org.junit.jupiter.api.Assertions.assertEquals(childAlertDTO.getAge(), 11);
+		org.junit.jupiter.api.Assertions.assertEquals(childAlertDTO.getFistName(), "chris");
+		org.junit.jupiter.api.Assertions.assertEquals(childAlertDTO.getLastName(),"redfield");
+		org.junit.jupiter.api.Assertions.assertEquals(childAlertDTO.getFamilyMember().size(), 0);
+		
+	}
 }
